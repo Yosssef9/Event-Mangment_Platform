@@ -1,0 +1,75 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* ===== Global Custom Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffe4f1; /* light pink */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ec4899; /* pink-500 */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #db2777; /* darker on hover */
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ec4899 #ffe4f1;
+}
+
+/* apply to your scrollable container */
+.scrollbar-x {
+  overflow-x: auto;
+  scrollbar-width: thin; /* for Firefox */
+  scrollbar-color: #a855f7 #f3e8ff; /* thumb color, track color for Firefox */
+}
+
+/* Chrome, Safari, Edge */
+.scrollbar-x::-webkit-scrollbar {
+  height: 8px; /* horizontal scrollbar thickness */
+}
+
+.scrollbar-x::-webkit-scrollbar-track {
+  background: #f3e8ff; /* track color */
+}
+
+.scrollbar-x::-webkit-scrollbar-thumb {
+  background-color: #a855f7; /* thumb color */
+  border-radius: 4px; /* rounded corners */
+  border: 2px solid #f3e8ff; /* optional border around thumb */
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #ffe4f1; /* light pink */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ec4899; /* pink-500 */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #db2777; /* darker on hover */
+}
