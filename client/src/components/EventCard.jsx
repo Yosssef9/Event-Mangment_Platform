@@ -100,12 +100,23 @@ export default function EventCard({ event }) {
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center space-x-1">
-            <StarRatingInteractive rating={Math.floor(event.avgRating)} />
-            <span className="text-sm font-medium">{event.avgRating}</span>
-            <span className="text-gray-500 text-sm">
-              ({event.totalRatings})
-            </span>
+            {eventEnding ? (
+              <>
+                <StarRatingInteractive rating={Math.floor(event.avgRating)} />
+                <span className="text-sm font-medium">{event.avgRating}</span>
+                <span className="text-gray-500 text-sm">
+                  ({event.totalRatings})
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="bg-gradient-to-r from-pink-400 to-purple-600 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-sm">
+                  Upcoming
+                </span>
+              </>
+            )}
           </div>
+
           <div className="flex items-center space-x-1 text-gray-500 text-sm mr-1">
             {event.isOnline ? (
               "🌐 Online"

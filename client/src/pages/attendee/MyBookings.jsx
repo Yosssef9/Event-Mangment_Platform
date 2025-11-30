@@ -159,7 +159,7 @@ export default function MyBookings() {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="min-h-screen w-full p-6 flex flex-col "
+      className=" w-full p-6 flex flex-col "
     >
       <div className="max-w-7xl mb-10 ">
         {/* Header */}
@@ -171,16 +171,19 @@ export default function MyBookings() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex gap-3 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8 justify-center">
           {["all", "upcoming", "past"].map((status) => (
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
-              className={`px-6 py-2 rounded-lg capitalize font-medium transition-all duration-300 ${
-                filterStatus === status
-                  ? "bg-linear-to-r from-pink-500 to-purple-600 text-white shadow-lg"
-                  : "bg-white text-gray-700 border border-gray-200 hover:border-pink-500"
-              }`}
+              className={`
+        px-4 sm:px-6 py-2 rounded-lg capitalize font-medium transition-all duration-300
+        ${
+          filterStatus === status
+            ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
+            : "bg-white text-gray-700 border border-gray-200 hover:border-pink-500"
+        }
+      `}
             >
               {status === "all" ? "All Bookings" : status}
             </button>

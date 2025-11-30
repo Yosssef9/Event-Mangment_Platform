@@ -8,6 +8,6 @@ const router = express.Router();
 router.get("/getMyTicket", authMiddleware, getMyTicket);
 
 // Organizer: scan a ticket
-router.post("/scanTicket/:ticketId", authMiddleware, scanTicket);
+router.get("/scanTicket/:eventId/:ticketId", authMiddleware, scanTicket);
 
 export default router;

@@ -1,14 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import api from "../../api/api";
+import { useLocation } from "react-router-dom";
 
 export default function TicketScanner() {
   const [qrCodeMessage, setQrCodeMessage] = useState("");
   const [ticketInfo, setTicketInfo] = useState(null);
   const [cameras, setCameras] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState(null);
+  const [scanned, setScanned] = useState(false); // track if already scanned
   const scannerRef = useRef(null);
   const qrRegionId = "qr-code-region";
+  const location = useLocation();
+  const event = location.state?.event;
 
   // Stop and clear scanner safely
   const stopScanner = async () => {
@@ -38,14 +42,27 @@ export default function TicketScanner() {
         { deviceId: { exact: cameraId } },
         { fps: 10, qrbox: { width: 300, height: 300 } },
         async (decodedText) => {
+          if (scanned) return; // stop multiple scans
+          setScanned(true); // mark as scanned
           setQrCodeMessage(decodedText);
+
+          // Stop scanner immediately
+          await stopScanner();
 
           // Fetch ticket info from backend
           try {
-            const res = await api.get(`/tickets/${decodedText}`);
+            const res = await api.get(
+              `/ticket/scanTicket/${event.id}/${decodedText}`
+            );
+            console.log("res", res);
             setTicketInfo(res.data);
           } catch (err) {
-            setTicketInfo({ error: "Ticket not found" });
+            console.log("err", err);
+
+            setTicketInfo({
+              success: false,
+              error: err?.response?.data?.message || "Ticket not found",
+            });
           }
         },
         (errorMessage) => {
@@ -92,6 +109,7 @@ export default function TicketScanner() {
   const handleRestart = async () => {
     setQrCodeMessage("");
     setTicketInfo(null);
+    setScanned(false); // allow scanning again
     if (selectedCamera) await startScanner(selectedCamera);
   };
 
@@ -171,32 +189,25 @@ export default function TicketScanner() {
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           background: "#fff",
         }}
-      >
-        {!qrCodeMessage && (
-          <p
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              color: "#9ca3af",
-              fontWeight: 500,
-            }}
-          >
-            Point your camera at a QR Code
-          </p>
-        )}
-      </div>
+      ></div>
+      {!qrCodeMessage && (
+        <p
+          style={{
+            color: "#9ca3af",
+            fontWeight: 500,
+            textAlign: "center",
+            marginTop: 10,
+          }}
+        >
+          Point your camera at a QR Code
+        </p>
+      )}
 
       <div style={{ marginTop: 20, textAlign: "center" }}>
         <h2 style={{ fontSize: "1.5rem", fontWeight: 600, color: "#7c3aed" }}>
           {qrCodeMessage ? "QR Code Scanned" : "Waiting for scan..."}
         </h2>
-        {qrCodeMessage && (
-          <p style={{ color: "#4b5563", wordBreak: "break-all" }}>
-            {qrCodeMessage}
-          </p>
-        )}
+
         {qrCodeMessage && (
           <button
             onClick={handleRestart}
@@ -230,53 +241,122 @@ export default function TicketScanner() {
             marginTop: 30,
             maxWidth: 480,
             width: "100%",
-            padding: 20,
-            borderRadius: 16,
+            padding: 25,
+            borderRadius: 20,
             backdropFilter: "blur(10px)",
             backgroundColor: ticketInfo.error
-              ? "rgba(254, 226, 226, 0.6)"
-              : "rgba(243, 232, 255, 0.6)",
-            border: `2px solid ${ticketInfo.error ? "#f87171" : "#a78bfa"}`,
-            boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
+              ? "rgba(254, 226, 226, 0.8)"
+              : "rgba(220, 252, 231, 0.9)",
+            border: `2px solid ${ticketInfo.error ? "#f87171" : "#22c55e"}`,
+            boxShadow: ticketInfo.error
+              ? "0 8px 24px rgba(248, 113, 113, 0.2)"
+              : "0 8px 24px rgba(34, 197, 94, 0.2)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           {ticketInfo.error ? (
-            <p
-              style={{
-                textAlign: "center",
-                color: "#b91c1c",
-                fontWeight: 600,
-                fontSize: "1.125rem",
-              }}
-            >
-              ❌ {ticketInfo.error}
-            </p>
+            <>
+              <div
+                style={{
+                  fontSize: "2rem",
+                  color: "#b91c1c",
+                  marginBottom: 10,
+                }}
+              >
+                ❌
+              </div>
+              <p
+                style={{
+                  textAlign: "center",
+                  color: "#b91c1c",
+                  fontWeight: 600,
+                  fontSize: "1.25rem",
+                }}
+              >
+                {ticketInfo.error}
+              </p>
+            </>
           ) : (
             <>
+              <div
+                style={{
+                  fontSize: "2.5rem",
+                  color: "#16a34a",
+                  marginBottom: 10,
+                }}
+              >
+                ✅
+              </div>
               <h2
                 style={{
                   textAlign: "center",
-                  fontSize: "1.75rem",
+                  fontSize: "1.8rem",
                   fontWeight: 700,
-                  color: "#7c3aed",
+                  color: "#16a34a",
                   marginBottom: 15,
                 }}
               >
-                🎟 Ticket Verified
+                Ticket Verified
               </h2>
-              <p style={{ fontWeight: 500, color: "#4b5563", marginBottom: 5 }}>
-                <strong>Ticket ID:</strong> {ticketInfo.ticket.id}
-              </p>
-              <p style={{ fontWeight: 500, color: "#4b5563", marginBottom: 5 }}>
-                <strong>QR Code:</strong> {ticketInfo.ticket.qrCode}
-              </p>
-              <p style={{ fontWeight: 500, color: "#4b5563", marginBottom: 5 }}>
-                <strong>User:</strong> {ticketInfo.ticket.user.name} —{" "}
-                {ticketInfo.ticket.user.email}
-              </p>
-              <p style={{ fontWeight: 500, color: "#4b5563" }}>
-                <strong>Event:</strong> {ticketInfo.ticket.event.title}
-              </p>
+
+              <div style={{ width: "100%", textAlign: "center" }}>
+                <p
+                  style={{
+                    fontWeight: 500,
+                    color: "#166534",
+                    marginBottom: 5,
+                  }}
+                >
+                  <strong>Ticket ID:</strong> {ticketInfo.ticket.id}
+                </p>
+
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontWeight: 500,
+                    color: "#166534",
+                    marginBottom: 5,
+                  }}
+                >
+                  <strong>QR Code:</strong>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      maxWidth: "250px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      backgroundColor: "#d1fae5",
+                      color: "#065f46",
+                    }}
+                    title={ticketInfo.ticket.qrCode} // tooltip to show full QR code
+                  >
+                    {ticketInfo.ticket.qrCode}
+                  </span>
+                </p>
+
+                <p
+                  style={{
+                    fontWeight: 500,
+                    color: "#166534",
+                    marginBottom: 5,
+                  }}
+                >
+                  <strong>User:</strong> {ticketInfo.ticket.user.name} —{" "}
+                  {ticketInfo.ticket.user.email}
+                </p>
+
+                <p style={{ fontWeight: 500, color: "#166534" }}>
+                  <strong>Event:</strong> {ticketInfo.ticket.event.title}
+                </p>
+              </div>
             </>
           )}
         </div>

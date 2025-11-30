@@ -77,7 +77,7 @@ export default function Footer() {
           href="https://github.com/Yosssef9"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-purple-700 font-bold hover:text-purple-400 transition-colors"
+          className="text-purple-700 font-bold hover:text-purple-400 transition-colors block sm:inline"
         >
           Yossef Yasser
         </a>

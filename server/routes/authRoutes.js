@@ -7,12 +7,15 @@ import {
   googleLogin,
 } from "../controllers/authControllers.js";
 import { validate } from "../middlewares/validate.js";
+import rateLimiter from "../middlewares/rateLimiter.js";
 import { body } from "express-validator";
 
 const router = express.Router();
 
 router.post(
   "/register",
+  rateLimiter,
+
   [
     body("name")
       .trim()
@@ -34,11 +37,14 @@ router.post(
 // 📌 Login route
 router.post(
   "/login",
+  rateLimiter,
+
   [
     body("email").isEmail().withMessage("Please enter a valid email"),
     body("password").notEmpty().withMessage("Password is required"),
   ],
   validate,
+
   loginUser
 );
 

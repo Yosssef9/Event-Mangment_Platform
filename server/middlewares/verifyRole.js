@@ -12,7 +12,7 @@ export const verifyRole = (...allowedRoles) => {
           .json({ message: "Access denied: insufficient role" });
       }
 
-      next(); // ✅ يسمح بالمرور لو الدور صحيح
+      next();
     } catch (error) {
       console.error("Role verification error:", error);
       res.status(500).json({ message: "Server error in role verification" });

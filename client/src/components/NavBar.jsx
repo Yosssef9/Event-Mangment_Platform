@@ -62,6 +62,38 @@ export default function NavBar() {
           { name: "Contact", path: "/contact" },
         ];
 
+  // 📌 Mobile Swipe to open/close sidebar
+  useEffect(() => {
+    let startX = 0;
+
+    const handleTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+
+      // 🟢 Swipe Right to OPEN (from left edge only)
+      if (!mobileMenuOpen && startX < window.innerWidth * 0.75 && diff > 70) {
+        setMobileMenuOpen(true);
+      }
+
+      // 🔴 Swipe Left to CLOSE (when menu is open)
+      if (mobileMenuOpen && diff < -70) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [mobileMenuOpen]);
+
   return (
     <>
       <nav className="w-full px-6 md:px-12 lg:px-20 flex justify-between items-center bg-white/90 backdrop-blur-md shadow-[0_4px_10px_rgba(0,0,0,0.1)] h-20">
@@ -179,67 +211,79 @@ export default function NavBar() {
         {mobileMenuOpen && (
           <>
             {/* Background dim */}
+            {/* Sliding Sidebar - NEW DESIGN */}
             <motion.div
-              className="fixed inset-0 bg-black/40 z-40"
-              onClick={() => setMobileMenuOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-
-            {/* Sliding Sidebar */}
-            <motion.div
-              className="fixed top-0 left-0 bottom-0 h-full w-72 bg-white shadow-lg z-50 p-6 flex flex-col overflow-y-auto"
+              className="fixed top-0 left-0 bottom-0  w-72 bg-gradient-to-b from-fuchsia-600 to-purple-700 text-white z-50 shadow-2xl flex flex-col overflow-y-auto rounded-r-md"
+              style={{ top: 0, bottom: 0, height: "100dvh" }}
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.25 }}
             >
-              {/* Close button */}
-              <button
-                className="text-2xl text-fuchsia-600 mb-6 self-end"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <FaTimes />
-              </button>
-
-              {/* sidebar links */}
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => {
-                    setActiveTab(link.name);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="py-4 text-lg font-semibold text-gray-700 border-b hover:text-fuchsia-600"
+              {/* Header (User info + close button) */}
+              <div className="flex justify-between items-center px-4 py-5 border-b border-white/20">
+                <h2 className="text-xl font-bold">Menu</h2>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-2xl hover:scale-110 transition"
                 >
-                  {link.name}
-                </Link>
-              ))}
+                  <FaTimes />
+                </button>
+              </div>
 
-              <div className="mt-6">
+              {/* Profile section */}
+              {user && (
+                <div className="flex flex-col items-center mt-6 mb-4">
+                  <img
+                    src={user.profileIcon?.url || defaultIcon}
+                    className="w-20 h-20 rounded-full border-4 border-white shadow-md object-cover"
+                  />
+                  <h3 className="mt-3 font-semibold text-lg">{user.name}</h3>
+                </div>
+              )}
+
+              {/* Links */}
+              <div className="px-3 flex flex-col gap-3">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => {
+                      setActiveTab(link.name);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="bg-white/15 hover:bg-white/25 px-4 py-3 rounded-lg font-medium transition flex items-center justify-between"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+
+              {/* User Options */}
+              <div className="mt-8 px-3 flex flex-col gap-3">
                 {user ? (
                   <>
                     <Link
                       to="/profile"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block py-3 border-b font-semibold"
+                      className="bg-white/15 hover:bg-white/25 px-4 py-3 rounded-lg font-medium transition"
                     >
                       Profile
                     </Link>
+
                     {user.role === "attendee" && (
                       <Link
                         to="/myBookings"
                         onClick={() => setMobileMenuOpen(false)}
-                        className="block py-3 border-b font-semibold"
+                        className="bg-white/15 hover:bg-white/25 px-4 py-3 rounded-lg font-medium transition"
                       >
                         My Bookings
                       </Link>
                     )}
+
                     <button
                       onClick={handleLogout}
-                      className="block w-full py-3 text-left font-semibold text-red-600"
+                      className="bg-red-500 hover:bg-red-600 px-4 py-3 rounded-lg font-semibold transition text-white mt-4 shadow-md"
                     >
                       Logout
                     </button>
@@ -249,14 +293,15 @@ export default function NavBar() {
                     <Link
                       to="/login"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block py-3 border-b font-semibold"
+                      className="bg-sky-500/90 hover:bg-sky-600 text-white px-4 py-3 rounded-lg font-medium transition"
                     >
                       Login
                     </Link>
+
                     <Link
                       to="/register"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block py-3 font-semibold"
+                      className="bg-rose-500/90 hover:bg-rose-600 text-white px-4 py-3 rounded-lg font-medium transition"
                     >
                       Register
                     </Link>

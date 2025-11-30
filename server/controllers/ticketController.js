@@ -64,10 +64,12 @@ export const scanTicket = async (req, res) => {
   try {
     const organizerId = req.user.id;
     const ticketToken = req.params.ticketId;
+    const eventId = req.params.eventId;
     console.log("ticketToken", ticketToken);
     // Find ticket and include event and user
+
     const ticket = await Ticket.findOne({
-      where: { token: ticketToken },
+      where: { token: ticketToken, eventId },
       include: [
         {
           model: Event,
@@ -100,6 +102,7 @@ export const scanTicket = async (req, res) => {
 
     // Mark ticket as used
     ticket.status = "used";
+    ticket.usedAt = new Date();
     await ticket.save();
 
     // Return ticket + user info
@@ -110,6 +113,7 @@ export const scanTicket = async (req, res) => {
         qrCode: ticket.token,
         event: ticket.event,
         user: ticket.user,
+        usedAt: ticket.usedAt,
       },
     });
   } catch (error) {

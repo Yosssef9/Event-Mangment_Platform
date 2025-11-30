@@ -5,17 +5,26 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../../api/api";
 import OrganizerEventCard from "../../components/OrganizerEventCard";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function OrganizerDashboard() {
   const [recentEvents, setRecentEvents] = useState([]);
   const [totalAnalytics, setTotalAnalytics] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   useEffect(() => {
     const fetchRecentEvents = async () => {
-      const res = await api.get(`/event/getRecentEvents`);
-      setRecentEvents(res.data);
-      console.log(res);
+      try {
+        setIsLoading(true);
+        const res = await api.get(`/event/getRecentEvents`);
+        setRecentEvents(res.data);
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchRecentEvents();
@@ -48,7 +57,9 @@ export default function OrganizerDashboard() {
             <div>
               <p className="text-gray-500 mb-1">Total Events</p>
               <h2 className="text-3xl font-bold text-gray-800">
-                {totalAnalytics.totalEvents}
+                {totalAnalytics?.totalEvents
+                  ? `${totalAnalytics.totalEvents.toLocaleString()}`
+                  : "0"}
               </h2>
             </div>
             <div className="bg-fuchsia-100 p-3 rounded-full">
@@ -66,7 +77,9 @@ export default function OrganizerDashboard() {
             <div>
               <p className="text-gray-500 mb-1">Total Attendees</p>
               <h2 className="text-3xl font-bold text-gray-800">
-                {totalAnalytics.totalAttendees}
+                {totalAnalytics?.totalAttendees
+                  ? `${totalAnalytics.totalAttendees.toLocaleString()}`
+                  : "0"}
               </h2>
             </div>
             <div className="bg-pink-100 p-3 rounded-full">
@@ -85,7 +98,9 @@ export default function OrganizerDashboard() {
               <p className="text-gray-500 mb-1">Total Revenue</p>
               <h2 className="text-3xl font-bold text-gray-800">
                 {" "}
-                ${totalAnalytics?.totalRevenue?.toLocaleString()}
+                {totalAnalytics?.totalRevenue
+                  ? `$${totalAnalytics.totalRevenue.toLocaleString()}`
+                  : "0"}
               </h2>
             </div>
             <div className="bg-purple-100 p-3 rounded-full">
@@ -106,7 +121,9 @@ export default function OrganizerDashboard() {
             My Events
           </button>
         </div>
-        {recentEvents.length === 0 ? (
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : recentEvents.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}

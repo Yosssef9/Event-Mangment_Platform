@@ -87,7 +87,7 @@ export default function OrganizerAnalytics() {
   return (
     <div className="w-full p-4 sm:p-6 space-y-6">
       {/* ===== Header & Event Selector ===== */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center sm:items-center gap-4">
         <h1 className="text-3xl font-bold text-gray-700">
           📊 Analytics Dashboard
         </h1>

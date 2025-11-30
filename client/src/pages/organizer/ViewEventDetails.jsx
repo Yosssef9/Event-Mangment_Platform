@@ -219,11 +219,6 @@ const initialAttendees = [
   },
 ];
 
-// const tickets = [
-//   { type: "VIP", sold: 25, remaining: 5, price: 2000 },
-//   { type: "General", sold: 80, remaining: 20, price: 1000 },
-// ];
-
 export default function ViewEventDetails() {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const { eventId } = useParams();
@@ -262,19 +257,22 @@ export default function ViewEventDetails() {
   };
 
   return (
-    <div className="min-h-screen p-6">
+    <div className=" min-h-screen flex flex-col overflow-x-auto  w-full">
       {/* ===== Page Header ===== */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
+      <div className="flex flex-col-reverse sm:flex-row justify-between items-center mb-6 gap-4">
+        {/* Header Text */}
+        <div className="text-center order-1 sm:order-0 w-full sm:w-auto">
           <h1 className="text-3xl font-bold text-pink-700">
             Spring Music Festival
           </h1>
           <p className="text-pink-400 mt-1">Organizer Dashboard</p>
         </div>
-        <div className="flex gap-2">
+
+        {/* Buttons */}
+        <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end order-0 sm:order-1">
           <button
-            onClick={() => navigate("/TicketScanner")}
-            className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg"
+            onClick={() => navigate("/TicketScanner", { state: { event } })}
+            className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
           >
             Scan Ticket
           </button>
@@ -282,7 +280,7 @@ export default function ViewEventDetails() {
             onClick={() =>
               navigate("/organizerAnalytics", { state: { event } })
             }
-            className="bg-pink-100 hover:bg-pink-200 text-pink-600 px-4 py-2 rounded-lg"
+            className="bg-pink-100 hover:bg-pink-200 text-pink-600 px-4 py-2 rounded-lg w-full sm:w-auto"
           >
             Event Analytics
           </button>
@@ -290,22 +288,23 @@ export default function ViewEventDetails() {
       </div>
 
       {/* ===== Main Content Grid ===== */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className=" grid md:grid-cols-2 gap-6">
         {/* ===== Event Overview Card ===== */}
-        <div className="bg-white rounded-xl shadow-md p-6 min-w-[600px]">
+        <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-full">
           {/* Event Image */}
           <img
             src="https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg?cs=srgb&dl=pexels-teddy-2263436.jpg&fm=jpg" // replace with your event image URL
             alt="Event"
-            className="w-full h-48 object-cover rounded-lg mb-4"
+            className="w-full h-48 object-cover rounded-lg mb-4 max-w-full"
           />
 
           <h2 className="text-2xl font-semibold text-pink-700 mb-2">
             Event Overview
           </h2>
           <p className="text-pink-500 mb-1">
-            <p>Date: {formatDate(event.startDate)}</p>
+            Date: {formatDate(event.startDate)}
           </p>
+
           <p className="text-pink-500 mb-1">
             <span className="font-medium">Location:</span>{" "}
             {event.isOnline ? "Online Event" : event.city}
@@ -315,13 +314,13 @@ export default function ViewEventDetails() {
         </div>
 
         {/* ===== Tickets / Pricing Card ===== */}
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-full">
           <h2 className="text-2xl font-semibold text-pink-700 mb-4">
             Tickets & Pricing
           </h2>
           <div className="space-y-3">
-            <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 flex justify-between items-center">
-              <div>
+            <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 flex flex-col sm:flex-row justify-between  sm:items-center gap-2">
+              <div className="">
                 <h4 className="text-pink-600 font-semibold">General</h4>
                 <p className="text-pink-500 text-sm">
                   Price: {event.price} EGP
@@ -341,68 +340,69 @@ export default function ViewEventDetails() {
         </div>
 
         {/* ===== Attendees Card ===== */}
-        <div className="md:col-span-2 bg-white rounded-xl shadow-md p-6">
+        <div className="md:col-span-2 bg-white rounded-xl shadow-md p-6 w-full max-w-full">
           <h2 className="text-2xl font-semibold text-pink-700 mb-4">
             Attendees
           </h2>
-          <div className=" max-h-[450px] overflow-auto custom-scrollbar">
-            {attendees.length === 0 ? (
-              <div className="text-center py-10 text-pink-500 font-medium">
-                No attendees yet. Invite people to join your event!
-              </div>
-            ) : (
-              <table className="min-w-full  divide-y divide-pink-100">
-                <thead>
-                  <tr className="bg-pink-50">
-                    {["name", "email", "status"].map((col) => (
-                      <th
-                        key={col}
-                        className="px-6 py-3 text-center text-pink-600 font-medium cursor-pointer select-none"
-                        onClick={() => sortBy(col)}
-                      >
-                        {col.charAt(0).toUpperCase() + col.slice(1)}{" "}
-                        {sortConfig.key === col
-                          ? sortConfig.direction === "asc"
-                            ? "↑"
-                            : "↓"
-                          : ""}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-pink-100">
-                  {attendees.map((attendee, index) => (
-                    <tr
-                      key={attendee.id}
-                      className={`${
-                        index % 2 === 0
-                          ? "bg-white hover:bg-fuchsia-100"
-                          : "bg-pink-50 hover:bg-fuchsia-100"
-                      } transition-colors duration-300`}
-                    >
-                      <td className="px-6 py-4 text-pink-600">
-                        {attendee.name}
-                      </td>
-                      <td className="px-6 py-4 text-pink-400">
-                        {attendee.email}
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-2 py-1 rounded-full text-sm font-medium ${
-                            attendee.status === "Used"
-                              ? "bg-pink-100 text-pink-700"
-                              : "bg-fuchsia-100 text-fuchsia-700"
-                          }`}
+          <div className="max-h-[450px] overflow-auto custom-scrollbar">
+            <div className="overflow-x-auto">
+              {attendees.length === 0 ? (
+                <div className="text-center py-10 text-pink-500 font-medium">
+                  No attendees yet. Invite people to join your event!
+                </div>
+              ) : (
+                <table className="min-w-full divide-y divide-pink-100 text-sm md:text-base">
+                  <thead>
+                    <tr className="bg-pink-50">
+                      {["name", "email", "status"].map((col) => (
+                        <th
+                          key={col}
+                          className="px-2 sm:px-4 py-2 text-center text-pink-600 font-medium cursor-pointer select-none"
+                          onClick={() => sortBy(col)}
                         >
-                          {attendee.status}
-                        </span>
-                      </td>
+                          {col.charAt(0).toUpperCase() + col.slice(1)}
+                          {sortConfig.key === col
+                            ? sortConfig.direction === "asc"
+                              ? "↑"
+                              : "↓"
+                            : ""}
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+                  </thead>
+                  <tbody className="divide-y divide-pink-100">
+                    {attendees.map((attendee, index) => (
+                      <tr
+                        key={attendee.id}
+                        className={`${
+                          index % 2 === 0
+                            ? "bg-white hover:bg-fuchsia-100"
+                            : "bg-pink-50 hover:bg-fuchsia-100"
+                        } transition-colors duration-300`}
+                      >
+                        <td className="px-2 sm:px-4 py-2 text-pink-600">
+                          {attendee.name}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2 text-pink-400">
+                          {attendee.email}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                              attendee.status === "used"
+                                ? "bg-red-100 text-pink-700"
+                                : "bg-fuchsia-100 text-fuchsia-700"
+                            }`}
+                          >
+                            {attendee.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
         </div>
       </div>

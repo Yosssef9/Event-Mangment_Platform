@@ -9,10 +9,13 @@ import {
   FaGlobe,
 } from "react-icons/fa";
 
+import { formatOnlyDate, formatOnlyTime } from "../../helpers/dateFormat";
+
 export default function BookingDetails() {
   const [userTicket, setUserTicket] = useState({});
   const location = useLocation();
   const { booking } = location.state || {};
+  console.log("booking", booking);
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -22,7 +25,7 @@ export default function BookingDetails() {
         const { data } = await api.get(`/ticket/getMyTicket`, {
           params: { eventId: booking.id },
         });
-
+        console.log("data", data);
         setUserTicket(data.userTicket);
       } catch (err) {
         console.error("Error fetching ticket:", err);
@@ -34,8 +37,6 @@ export default function BookingDetails() {
 
   if (!booking) return <p className="text-center mt-10">No booking found.</p>;
 
-  const formatDate = (dateStr) => new Date(dateStr).toLocaleString();
-
   return (
     <div className="  my-10 p-6 bg-white shadow-xl rounded-2xl">
       {/* Event Image */}
@@ -46,27 +47,30 @@ export default function BookingDetails() {
       />
 
       {/* Event Info */}
-      <div className="mb-6">
+      <div className="mb-6 px-10">
         <h1 className="text-3xl font-bold mb-3">{booking.title}</h1>
         <p className="text-gray-700 mb-4">{booking.description}</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center  gap-2">
             <FaCalendarAlt className="text-blue-500" />
-            <span>{formatDate(booking.startDate)}</span>
+            <span>{formatOnlyDate(booking.startDate)}</span>
           </div>
           <div className="flex items-center gap-2">
             <FaClock className="text-green-500" />
-            <span>{formatDate(booking.endDate)}</span>
+            <span>{formatOnlyTime(booking.startDate)}</span>
           </div>
           <div className="flex items-center gap-2">
             <FaTicketAlt className="text-purple-500" />
             <span>{booking.type}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <FaGlobe className="text-yellow-500" />
-            <span>{booking.isOnline ? "Online" : "Offline"}</span>
-          </div>
+          {booking.isOnline && (
+            <div className="flex items-center gap-2">
+              <FaGlobe className="text-blue-500" />
+              <span> Online</span>
+            </div>
+          )}
+
           {booking.city && (
             <div className="flex items-center gap-2">
               <FaMapMarkerAlt className="text-red-500" />

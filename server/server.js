@@ -19,13 +19,24 @@ const app = express();
 app.use(cookieParser());
 
 // ✅ إعداد CORS
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://bwsxd8pq-5173.uks1.devtunnels.ms",
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // , // عنوان الـ frontend
-    credentials: true, // عشان الكوكيز أو التوكنز تتنقل
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow Postman or server requests
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
-
 // Middleware
 app.use(requestLogger);
 app.use("/api/webhook", webhookRoutes);

@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
       // ✅ رجّع اليوزر علشان اللي ينادي login يقدر يقرر هو يروح فين
       return { success: true, user: currentUser };
     } catch (err) {
+      console.log("err.response", err.response);
       const message =
         err.response?.data?.message || "Login failed. Please try again.";
       return { success: false, message };
@@ -66,6 +67,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data.user);
       return { success: true };
     } catch (err) {
+      console.log("err.response", err.response);
       const message =
         err.response?.data?.message || "Registration failed. Please try again.";
       return { success: false, message };

@@ -24,3 +24,16 @@ export const formatDate = (isoDate) => {
 
   return `${getOrdinal(day)} ${month} ${year}`;
 };
+
+// دالة لتنسيق التاريخ فقط
+export const formatOnlyDate = (date) => {
+  const d = new Date(date);
+  return d.toLocaleDateString(); // يظهر مثلاً "30/11/2025"
+};
+
+// دالة لتنسيق الوقت فقط
+export const formatOnlyTime = (date) => {
+  const d = new Date(date);
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  // يظهر مثلاً "14:30"
+};

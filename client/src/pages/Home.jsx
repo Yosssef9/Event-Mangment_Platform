@@ -190,12 +190,15 @@ function Home() {
         </p>
 
         <div className="flex justify-center gap-6 flex-wrap">
-          <a
-            href="/register"
-            className="px-8 py-4 font-semibold rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
-          >
-            Create Free Account
-          </a>
+          {!user && (
+            <a
+              href="/register"
+              className="px-8 py-4 font-semibold rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
+            >
+              Create Free Account
+            </a>
+          )}
+
           <a
             href="/events"
             className="px-8 py-4 font-semibold rounded-full border-2 border-purple-500 text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300"

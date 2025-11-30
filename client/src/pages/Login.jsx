@@ -27,6 +27,7 @@ export default function Login() {
 
     try {
       const res = await login(emailValue, passwordValue);
+      console.log("res", res);
       if (!res.success) {
         setErrorMsg(res.message);
         return;
@@ -45,6 +46,7 @@ export default function Login() {
       }
       console.log("✅ Login success:", res);
     } catch (err) {
+      console.log("err", err);
       if (err.response) {
         // السيرفر ردّ فعلاً لكن فيه error
         console.error("❌ Login error:", err.response.data);
@@ -124,7 +126,7 @@ export default function Login() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -5 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="text-red-500 text-sm h-4 text-center"
+                className="text-red-500  text-sm min-h-4 text-center"
               >
                 {errorMsg}
               </motion.div>

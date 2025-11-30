@@ -35,7 +35,7 @@ export default function Register() {
         passwordValue,
         roleValue
       );
-
+      console.log("res", res);
       if (!res.success) {
         setErrorMsg(res.message);
         return;
@@ -142,7 +142,7 @@ export default function Register() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -5 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="text-red-500 text-sm h-4 text-center"
+                className="text-red-500 text-sm min-h-4 text-center"
               >
                 {errorMsg}
               </motion.div>
