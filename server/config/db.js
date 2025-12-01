@@ -5,16 +5,20 @@ dotenv.config();
 export const sequelize = new Sequelize(
   process.env.DB_NAME, // database name
   process.env.DB_USER_POSTGRESQL, // username
-  process.env.DB_PASSWORD_SQL, // password
+  process.env.DB_PASSWORD_POSTGRESQL, // password
   {
     host: process.env.DB_SERVER_POSTGRESQL,
     dialect: process.env.DB_DIALECT,
-    // dialectOptions: {
-    //   options: {
-    //     encrypt: true,
-    //     trustServerCertificate: true,
-    //   },
-    // },
+    dialectOptions: {
+      // options: {
+      //   encrypt: true,
+      //   trustServerCertificate: true,
+      // },
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
     logging: false, // enable SQL logs for debugging
   }
 );
@@ -22,7 +26,9 @@ export const sequelize = new Sequelize(
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log("✅ Connected to SQL Server with Sequelize");
+    console.log(
+      `✅ Connected to ${process.env.DB_DIALECT} Server with Sequelize`
+    );
   } catch (error) {
     console.error("❌ Database connection failed:", error);
   }
