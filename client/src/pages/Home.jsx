@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
@@ -32,12 +33,12 @@ function Home() {
         to corporate events, we make every celebration unforgettable.
       </p>
       {/* ===== Call to Action Button ===== */}
-      <a
-        href="/events"
+      <Link
+        to="/events"
         className="px-8 py-4 bg-gradient-to-tr from-pink-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-transform duration-300"
       >
         Explore Events
-      </a>
+      </Link>
 
       {/* ===== Popular Categories Section ===== */}
       <div className="text-center mb-16 mt-24 relative">
@@ -198,13 +199,12 @@ function Home() {
               Create Free Account
             </a>
           )}
-
-          <a
-            href="/events"
+          <Link
+            to="/events"
             className="px-8 py-4 font-semibold rounded-full border-2 border-purple-500 text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300"
           >
             Browse Events
-          </a>
+          </Link>
         </div>
       </div>
     </>
