@@ -20,7 +20,7 @@ export const createEvent = async (req, res) => {
       type,
       price,
     } = req.body;
-
+    isOnline = isOnline === "true" || isOnline === true;
     if (req.user.role !== "organizer") {
       return res.status(403).json({
         success: false,
