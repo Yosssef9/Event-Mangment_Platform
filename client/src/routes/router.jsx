@@ -12,8 +12,8 @@ const Contact = lazy(() => import("../pages/Contact"));
 const About = lazy(() => import("../pages/About"));
 const Login = lazy(() => import("../pages/Login"));
 const Register = lazy(() => import("../pages/Register"));
-const paymentSuccess = lazy(() => import("../pages/payment/paymentSuccess"));
-const paymentCancel = lazy(() => import("../pages/payment/paymentCancel"));
+const PaymentSuccess = lazy(() => import("../pages/payment/PaymentSuccess"));
+const PaymentCancel = lazy(() => import("../pages/payment/PaymentCancel"));
 const ErrorPage = lazy(() => import("../pages/ErrorPage"));
 const Profile = lazy(() => import("../pages/Profile"));
 const MyBookings = lazy(() => import("../pages/attendee/MyBookings"));
@@ -175,12 +175,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/paymentSuccess",
-    element: withSuspense(paymentSuccess),
+    element: withSuspense(PaymentSuccess),
     errorElement: withSuspense(ErrorPage),
   },
   {
     path: "/paymentCancel",
-    element: withSuspense(paymentCancel),
+    element: withSuspense(PaymentCancel),
     errorElement: withSuspense(ErrorPage),
   },
 ]);
