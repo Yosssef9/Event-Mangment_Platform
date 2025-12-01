@@ -22,7 +22,7 @@ app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",
   "https://bwsxd8pq-5173.uks1.devtunnels.ms",
-  "https://event-mangment-platform.vercel.app/",
+  "https://event-mangment-platform.vercel.app",
 ];
 
 app.use(
