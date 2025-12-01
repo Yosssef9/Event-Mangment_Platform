@@ -20,7 +20,7 @@ export const createEvent = async (req, res) => {
       type,
       price,
     } = req.body;
-    isOnline = isOnline === "true" || isOnline === true;
+    const isOnlineBoolean = isOnline === "true" || isOnline === true;
     if (req.user.role !== "organizer") {
       return res.status(403).json({
         success: false,
@@ -54,7 +54,7 @@ export const createEvent = async (req, res) => {
     }
 
     // Validate location for non-online events
-    if (!isOnline && (!city || !street)) {
+    if (!isOnlineBoolean && (!city || !street)) {
       return res.status(400).json({
         success: false,
         message: "City and street are required for in-person events",
@@ -68,9 +68,9 @@ export const createEvent = async (req, res) => {
       description,
       startDate,
       endDate,
-      city: isOnline ? null : city,
-      street: isOnline ? null : street,
-      isOnline,
+      city: isOnlineBoolean ? null : city,
+      street: isOnlineBoolean ? null : street,
+      isOnline: isOnlineBoolean,
       capacity: capacity ? parseInt(capacity) : null,
       type,
       organizerId: req.user.id,
