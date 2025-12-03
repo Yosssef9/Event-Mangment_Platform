@@ -4,7 +4,7 @@ import Ticket from "../models/Ticket.js";
 import EventAttendee from "../models/EventAttendee.js";
 import { where } from "sequelize";
 import { sequelize } from "../config/db.js";
-import { Op, fn, col, literal } from "sequelize";
+import { Op, fn, col, literal, Sequelize } from "sequelize";
 
 export const createEvent = async (req, res) => {
   try {
@@ -442,7 +442,7 @@ export const getEventAnalytics = async (req, res) => {
 export const getEventsTotalAnalytics = async (req, res) => {
   try {
     const organizerId = req.user.id;
-    console.log(organizerId);
+
     const totalAttendees = await EventAttendee.count({
       include: [
         {
@@ -453,35 +453,40 @@ export const getEventsTotalAnalytics = async (req, res) => {
         },
       ],
     });
+
     const totalCapacity = await Event.sum("capacity", {
       where: { organizerId },
     });
 
-    const totalRevenue = await EventAttendee.sum("Event.price", {
-      include: [
-        {
-          model: Event,
-          as: "event",
-          where: { organizerId },
-          attributes: [],
-        },
-      ],
-      raw: true,
-    });
+    const totalRevenue = await sequelize.query(
+      `
+      SELECT SUM(e.price) AS "totalRevenue"
+      FROM "EventAttendees" ea
+      JOIN "Event" e ON ea."eventId" = e.id
+      WHERE e."organizerId" = :organizerId
+      `,
+      {
+        replacements: { organizerId },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    const revenue = totalRevenue[0]?.totalRevenue || 0;
 
     const top5Events = await sequelize.query(
       `
-  SELECT TOP 5
-      e.id AS event_id,
-      e.title,
-      COUNT(ea.id) AS soldTickets
-  FROM Event e
-  LEFT JOIN EventAttendees ea
-      ON e.id = ea.eventId
-  WHERE e.organizerId = :organizerId
-  GROUP BY e.id, e.title
-  ORDER BY soldTickets DESC
-  `,
+      SELECT 
+          e.id AS event_id,
+          e.title,
+          COUNT(ea.id) AS soldTickets
+      FROM "Event" e
+      LEFT JOIN "EventAttendees" ea
+          ON e.id = ea."eventId"
+      WHERE e."organizerId" = :organizerId
+      GROUP BY e.id, e.title
+      ORDER BY soldTickets DESC
+      LIMIT 5
+      `,
       {
         replacements: { organizerId },
         type: sequelize.QueryTypes.SELECT,
@@ -489,12 +494,12 @@ export const getEventsTotalAnalytics = async (req, res) => {
     );
 
     const totalEvents = await Event.count({
-      where: { organizerId: req.user.id },
+      where: { organizerId },
     });
 
     const totalAnalytics = {
       totalAttendees,
-      totalRevenue,
+      totalRevenue: revenue,
       soldTickets: totalAttendees,
       remainingTickets: totalCapacity - totalAttendees,
       top5Events,
@@ -502,10 +507,10 @@ export const getEventsTotalAnalytics = async (req, res) => {
       totalEvents,
     };
 
-    res.json(totalAnalytics); // نرجع النتيجة للـ frontend
+    return res.json(totalAnalytics);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Analytics Error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
