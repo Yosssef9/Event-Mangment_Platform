@@ -190,6 +190,7 @@ export default function OrganizerMyEvents() {
                       Description
                     </label>
                     <textarea
+                      maxLength={50}
                       value={newEvent.description}
                       onChange={(e) =>
                         setNewEvent({
