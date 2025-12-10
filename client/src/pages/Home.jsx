@@ -20,76 +20,88 @@ function Home() {
 
   return (
     <>
-      {/* ===== Headings ===== */}
-      <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-gray-800 drop-shadow-md">
-        Your Dream Event
-      </h1>
-      <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-tl from-pink-400 to-purple-700 bg-clip-text text-transparent">
-        Starts Here
-      </h2>
-      {/* ===== Description ===== */}
-      <p className="max-w-2xl text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
-        Connect with the world’s most trusted event professionals. From weddings
-        to corporate events, we make every celebration unforgettable.
-      </p>
-      {/* ===== Call to Action Button ===== */}
-      <Link
-        to="/events"
-        className="px-8 py-4 bg-gradient-to-tr from-pink-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-transform duration-300"
-      >
-        Explore Events
-      </Link>
-
-      {/* ===== Popular Categories Section ===== */}
-      <div className="text-center mb-16 mt-24 relative">
-        <h2 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-pink-500 via-purple-600 to-fuchsia-500 bg-clip-text text-transparent drop-shadow-sm">
-          Popular Categories
+      <div className="mt-16 mb-52">
+        {/* ===== Headings ===== */}
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-gray-800 drop-shadow-md">
+          Your Dream Event
+        </h1>
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-tl from-pink-400 to-purple-700 bg-clip-text text-transparent">
+          Starts Here
         </h2>
-
-        {/* decorative line */}
-        <div className="w-24 h-1 mx-auto mb-5 bg-gradient-to-r from-pink-400 to-purple-600 rounded-full"></div>
-
-        <p className="text-gray-600 text-lg max-w-xl mx-auto">
-          Find the perfect event that matches your interests — from music
-          concerts to workshops and sports activities.
+        {/* ===== Description ===== */}
+        <p className="max-w-2xl text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
+          Connect with the world’s most trusted event professionals. From
+          weddings to corporate events, we make every celebration unforgettable.
         </p>
+        {/* ===== Call to Action Button ===== */}
+        <Link
+          to="/events"
+          className="px-8 py-4 bg-gradient-to-tr from-pink-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-transform duration-300"
+        >
+          Explore Events
+        </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
-        {[
-          { label: "Weddings", icon: "💍", color: "from-pink-400 to-pink-600" },
-          {
-            label: "Conferences",
-            icon: "🎤",
-            color: "from-purple-400 to-purple-600",
-          },
-          {
-            label: "Concerts",
-            icon: "🎵",
-            color: "from-fuchsia-400 to-fuchsia-600",
-          },
-          { label: "Sports", icon: "⚽", color: "from-blue-400 to-blue-600" },
-          {
-            label: "Workshops",
-            icon: "🧠",
-            color: "from-orange-400 to-orange-600",
-          },
-          { label: "Parties", icon: "🥳", color: "from-teal-400 to-teal-600" },
-        ].map((cat, i) => (
-          <div
-            key={i}
-            className={`rounded-2xl text-center p-6 shadow-lg transition transform hover:-translate-y-2 hover:shadow-2xl bg-gradient-to-br ${cat.color}`}
-          >
-            <div className="text-4xl mb-3 drop-shadow-sm">{cat.icon}</div>
-            <p className="text-white font-bold text-lg tracking-wide">
-              {cat.label}
-            </p>
-          </div>
-        ))}
+      {/* ===== Popular Categories Section ===== */}
+      <div className="mb-48">
+        <div className="text-center mb-16 mt-24 relative">
+          <h2 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-pink-500 via-purple-600 to-fuchsia-500 bg-clip-text text-transparent drop-shadow-sm">
+            Popular Categories
+          </h2>
+
+          {/* decorative line */}
+          <div className="w-24 h-1 mx-auto mb-5 bg-gradient-to-r from-pink-400 to-purple-600 rounded-full"></div>
+
+          <p className="text-gray-600 text-lg max-w-xl mx-auto">
+            Find the perfect event that matches your interests — from music
+            concerts to workshops and sports activities.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
+          {[
+            {
+              label: "Weddings",
+              icon: "💍",
+              color: "from-pink-400 to-pink-600",
+            },
+            {
+              label: "Conferences",
+              icon: "🎤",
+              color: "from-purple-400 to-purple-600",
+            },
+            {
+              label: "Concerts",
+              icon: "🎵",
+              color: "from-fuchsia-400 to-fuchsia-600",
+            },
+            { label: "Sports", icon: "⚽", color: "from-blue-400 to-blue-600" },
+            {
+              label: "Workshops",
+              icon: "🧠",
+              color: "from-orange-400 to-orange-600",
+            },
+            {
+              label: "Parties",
+              icon: "🥳",
+              color: "from-teal-400 to-teal-600",
+            },
+          ].map((cat, i) => (
+            <div
+              key={i}
+              className={`rounded-2xl text-center p-6 shadow-lg transition transform hover:-translate-y-2 hover:shadow-2xl bg-gradient-to-br ${cat.color}`}
+            >
+              <div className="text-4xl mb-3 drop-shadow-sm">{cat.icon}</div>
+              <p className="text-white font-bold text-lg tracking-wide">
+                {cat.label}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ===== Featured Event Themes Section ===== */}
-      <div className="mt-24 text-center">
+      <div className="my-24 text-center">
         <div className="mb-14">
           {/* icon */}
           <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-500 to-purple-600 text-white text-3xl shadow-lg mb-5">
