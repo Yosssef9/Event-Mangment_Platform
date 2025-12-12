@@ -6,225 +6,14 @@ import { useParams, useLocation } from "react-router-dom";
 import { formatDate } from "../../helpers/dateFormat";
 import { useNavigate } from "react-router-dom";
 
-const initialAttendees = [
-  {
-    id: 1,
-    name: "Sara Ahmed",
-    email: "sara@example.com",
-    ticket: "VIP",
-    status: "Used",
-  },
-  {
-    id: 2,
-    name: "Mona Ali",
-    email: "mona@example.com",
-    ticket: "General",
-    status: "Not Used",
-  },
-  {
-    id: 3,
-    name: "Omar Hassan",
-    email: "omar@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 4,
-    name: "Karim Samir",
-    email: "karim@example.com",
-    ticket: "VIP",
-    status: "Not Used",
-  },
-  {
-    id: 5,
-    name: "Aya Mostafa",
-    email: "aya@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 6,
-    name: "Youssef Tarek",
-    email: "youssef@example.com",
-    ticket: "VIP",
-    status: "Used",
-  },
-  {
-    id: 7,
-    name: "Nour Mohamed",
-    email: "nour@example.com",
-    ticket: "General",
-    status: "Not Used",
-  },
-  {
-    id: 8,
-    name: "Hana Ibrahim",
-    email: "hana@example.com",
-    ticket: "VIP",
-    status: "Used",
-  },
-  {
-    id: 9,
-    name: "Mostafa Adel",
-    email: "mostafa@example.com",
-    ticket: "General",
-    status: "Not Used",
-  },
-  {
-    id: 10,
-    name: "Rana Ahmed",
-    email: "rana@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 11,
-    name: "Mohamed Ziad",
-    email: "ziad@example.com",
-    ticket: "VIP",
-    status: "Used",
-  },
-  {
-    id: 12,
-    name: "Salma Nasser",
-    email: "salma@example.com",
-    ticket: "General",
-    status: "Not Used",
-  },
-  {
-    id: 13,
-    name: "Hussein Khaled",
-    email: "hussein@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 14,
-    name: "Laila Magdy",
-    email: "laila@example.com",
-    ticket: "VIP",
-    status: "Not Used",
-  },
-  {
-    id: 15,
-    name: "Tamer Yasser",
-    email: "tamer@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 16,
-    name: "Jana Wael",
-    email: "jana@example.com",
-    ticket: "VIP",
-    status: "Used",
-  },
-  {
-    id: 17,
-    name: "Ola Khalifa",
-    email: "ola@example.com",
-    ticket: "General",
-    status: "Not Used",
-  },
-  {
-    id: 18,
-    name: "Ahmed Fathy",
-    email: "afathy@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 19,
-    name: "Nadine Lotfy",
-    email: "nadine@example.com",
-    ticket: "VIP",
-    status: "Not Used",
-  },
-  {
-    id: 20,
-    name: "Walid Reda",
-    email: "walid@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 21,
-    name: "Rashed Omar",
-    email: "rashed@example.com",
-    ticket: "General",
-    status: "Not Used",
-  },
-  {
-    id: 22,
-    name: "Malak Hesham",
-    email: "malak@example.com",
-    ticket: "VIP",
-    status: "Used",
-  },
-  {
-    id: 23,
-    name: "Basma Ahmed",
-    email: "basma@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 24,
-    name: "Adham Nour",
-    email: "adham@example.com",
-    ticket: "VIP",
-    status: "Not Used",
-  },
-  {
-    id: 25,
-    name: "Hossam Mohamed",
-    email: "hossam@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 26,
-    name: "Mariam Yassin",
-    email: "mariam@example.com",
-    ticket: "General",
-    status: "Not Used",
-  },
-  {
-    id: 27,
-    name: "Farah Ehab",
-    email: "farah@example.com",
-    ticket: "VIP",
-    status: "Used",
-  },
-  {
-    id: 28,
-    name: "Khaled Sharif",
-    email: "khaled@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-  {
-    id: 29,
-    name: "Nadine Samy",
-    email: "nsamy@example.com",
-    ticket: "VIP",
-    status: "Not Used",
-  },
-  {
-    id: 30,
-    name: "Mahmoud Saad",
-    email: "mahmoud@example.com",
-    ticket: "General",
-    status: "Used",
-  },
-];
+
 
 export default function ViewEventDetails() {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const { eventId } = useParams();
   console.log("Event ID:", eventId);
   const location = useLocation();
-  const { event } = location.state || {}; // هنا بيجيلك object كامل
+  const { event } = location.state || {}; 
   const [attendees, setAttendees] = useState([]);
   const [capacityDetails, setCapacityDetails] = useState({});
   const navigate = useNavigate();
@@ -263,7 +52,7 @@ export default function ViewEventDetails() {
         {/* Header Text */}
         <div className="text-center order-1 sm:order-0 w-full sm:w-auto">
           <h1 className="text-3xl font-bold text-pink-700">
-            Spring Music Festival
+            {event.title}
           </h1>
           <p className="text-pink-400 mt-1">Organizer Dashboard</p>
         </div>
@@ -293,7 +82,7 @@ export default function ViewEventDetails() {
         <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-full">
           {/* Event Image */}
           <img
-            src="https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg?cs=srgb&dl=pexels-teddy-2263436.jpg&fm=jpg" // replace with your event image URL
+            src={event.image} 
             alt="Event"
             className="w-full h-48 object-cover rounded-lg mb-4 max-w-full"
           />
