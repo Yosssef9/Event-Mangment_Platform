@@ -79,7 +79,7 @@ export default function OrganizerMyEvents() {
       formData.append("capacity", parseInt(newEvent.capacity, 10));
       formData.append("type", newEvent.type);
       formData.append("price", parseInt(newEvent.price) || 0);
-      formData.append("image", newEvent.image); // add image file
+      formData.append("image", newEvent.image); 
       setDisableSubmitButton(true);
 
       const res = await api.post("/event/createEvent", formData, {
