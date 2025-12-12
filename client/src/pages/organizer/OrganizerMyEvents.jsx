@@ -173,7 +173,7 @@ export default function OrganizerMyEvents() {
                       Event Title
                     </label>
                     <input
-                      maxLength={15}
+                      maxLength={30}
                       type="text"
                       value={newEvent.title}
                       onChange={(e) =>
